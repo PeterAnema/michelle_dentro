@@ -1,11 +1,13 @@
 package nl.novi.michelle_dentro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,12 +28,19 @@ public class Member {
     @NotNull
     private MemberType type;
 
-    @ManyToMany
-    private List<ExamDay> examDayAsStudent;
+    @Column
+    private int level = 0;  // only for students
 
-    @ManyToMany
-    private List<ExamDay> examDayAsExaminator;
+    @OneToOne(mappedBy = "coordinator", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({ "coordinator", "examinators", "students" })
+    private ExamDay examDayAsCoordinator;
 
-    @ManyToMany
-    private List<ExamDay> examDayAsCoordinator;
+    @ManyToMany(mappedBy = "examinators", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({ "coordinator", "examinators", "students" })
+    private List<ExamDay> examDaysAsExaminator = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "students", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({ "coordinator", "examinators", "students" })
+    private List<ExamDay> examDaysAsStudent = new ArrayList<>();
+
 }

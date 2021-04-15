@@ -1,12 +1,14 @@
 package nl.novi.michelle_dentro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,13 +25,16 @@ public class ExamDay {
     @NotNull
     private LocalDateTime date;
 
-    @ManyToMany(mappedBy = "examDayAsCoordinator", cascade = CascadeType.ALL)
-    private List<Member> coordinator;
+    @OneToOne
+    @JsonIgnoreProperties({ "examDayAsCoordinator", "examDaysAsExaminator", "examDaysAsStudent" })
+    private Member coordinator;
 
-    @ManyToMany(mappedBy = "examDayAsExaminator", cascade = CascadeType.ALL)
-    private List<Member> examinators;
+    @ManyToMany
+    @JsonIgnoreProperties({ "examDayAsCoordinator", "examDaysAsExaminator", "examDaysAsStudent" })
+    private List<Member> examinators = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "examDayAsStudent", cascade = CascadeType.ALL)
-    private List<Member> students;
+    @ManyToMany
+    @JsonIgnoreProperties({ "examDayAsCoordinator", "examDaysAsExaminator", "examDaysAsStudent" })
+    private List<Member> students = new ArrayList<>();
 
 }
