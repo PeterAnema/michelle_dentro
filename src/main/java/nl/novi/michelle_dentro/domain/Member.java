@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "members")
@@ -25,4 +26,12 @@ public class Member {
     @NotNull
     private MemberType type;
 
+    @ManyToMany
+    private List<ExamDay> examDayAsStudent;
+
+    @ManyToMany
+    private List<ExamDay> examDayAsExaminator;
+
+    @ManyToMany
+    private List<ExamDay> examDayAsCoordinator;
 }

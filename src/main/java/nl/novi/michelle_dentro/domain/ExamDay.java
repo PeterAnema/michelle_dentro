@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -21,17 +21,15 @@ public class ExamDay {
 
     @Column
     @NotNull
-    private Date date;
+    private LocalDateTime date;
 
-    @OneToOne
-    private Member coordinator;
+    @ManyToMany(mappedBy = "examDayAsCoordinator", cascade = CascadeType.ALL)
+    private List<Member> coordinator;
 
-    @OneToMany(mappedBy = "examDay", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<Member> students;
-
-    @OneToMany(mappedBy = "examDay", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @ManyToMany(mappedBy = "examDayAsExaminator", cascade = CascadeType.ALL)
     private List<Member> examinators;
+
+    @ManyToMany(mappedBy = "examDayAsStudent", cascade = CascadeType.ALL)
+    private List<Member> students;
 
 }
